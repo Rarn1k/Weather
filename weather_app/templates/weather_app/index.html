@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погода и точка</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<form method="post" class="search-form">
+    {% csrf_token %}
+    <div class="city-dropdown">
+        <input id="city" name="city" type="text" oninput="searchCity()" autocomplete="off" placeholder="Введите город"/>
+        <div class="dropdown-content" id="search-dropdown"></div>
+    </div>
+    <button type="submit">Поиск</button>
+</form>
+
+{% if last_city %}
+    <div class="last-city">
+        Посмотреть для <a href="{% url 'index' %}?city={{ last_city }}" class="last-city-button"> {{ last_city }}</a>
+    </div>
+{% endif %}
+
+<div class="container">
+    {% if weather_data %}
+    <div class="current-weather">
+        <h1>{{ weather_data.city }}</h1>
+        <h3>Сегодня</h3>
+        <img src="{{ weather_data.img }}" alt="{{ weather_data.description }}">
+        <p>{{ weather_data.temperature }}°C</p>
+        <p class="weather-description">{{ weather_data.description }}</p>
+    </div>
+
+    {% if daily_forecasts %}
+    <div class="forecast-container">
+        {% for forecast in daily_forecasts %}
+        <div class="forecast">
+            <h3>{{ forecast.day_of_week }}</h3>
+            <p>{{ forecast.data }}</p>
+            <img src="{{ forecast.img }}" alt="{{ forecast.description }}">
+            <p>От {{ forecast.min_temp }}°C До {{ forecast.max_temp }}°C</p>
+            <p class="weather-description">{{ forecast.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#city').val('');
+    });
+
+    async function displayResults(cities) {
+        const searchDiv = $('#search-dropdown');
+        searchDiv.empty();
+        if (cities.length > 0) {
+            cities.forEach(city => {
+                const cityElement = $('<p class="dropdown-item">' + city.city_name + '</p>');
+                cityElement.on('click', function() {
+                    selectCity(city.city_name);
+                });
+                searchDiv.append(cityElement);
+            });
+            searchDiv.show();
+        } else {
+            searchDiv.hide();
+        }
+    }
+
+    async function searchCity() {
+        const text = $('#city').val().toLowerCase();
+        if (text.length > 0) {
+            try {
+                const response = await $.ajax({
+                    data: {
+                        'city': text,
+                        'csrfmiddlewaretoken': Cookies.get('csrftoken')
+                    },
+                    dataType: 'json',
+                    url: "{% url 'search_ajax' %}",
+                    type: 'POST'
+                });
+                displayResults(JSON.parse(response.cities_json));
+            } catch (error) {
+                console.error('AJAX request failed:', error);
+            }
+        } else {
+            $('#search-dropdown').hide();
+        }
+    }
+
+    function selectCity(city) {
+        $('#city').val(city);
+        $('form.search-form').submit();
+        $('#search-dropdown').hide();
+    }
+
+    $("#city").on('focus', function() {
+        $('#search-dropdown').show();
+    });
+
+    $(document).click(function(event) {
+        if (!$(event.target).closest('.search-form').length) {
+            $('#search-dropdown').hide();
+        }
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.search-form {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#city {
+    padding: 12px;
+    width: 350px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.city-dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 1000;
+    overflow-y: auto;
+    display: none;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    margin: 0;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.container {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.current-weather {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 760px;
+}
+
+.current-weather h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+.forecast-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 800px;
+}
+
+.forecast {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    width: 20%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.forecast img {
+    max-width: 100%;
+}
+
+.last-city {
+    margin: 20px;
+    text-align: center;
+}
+
+
+.last-city-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.last-city-button:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
